@@ -8,9 +8,7 @@ public class TreeNode : MonoBehaviour
 	public int maxConnections;
 	public int currentConnections = 0;
 
-	public GameObject textPrefab;
-
-	private GameObject connectionsText;
+	public GameObject textObject;
 
 	private List<TreeNode> connections = new List<TreeNode>();
 
@@ -18,8 +16,7 @@ public class TreeNode : MonoBehaviour
     void Start()
     {
         Debug.Log("Node start");
-		connectionsText = Instantiate(textPrefab, Camera.main.WorldToScreenPoint(transform.position), transform.rotation, GameObject.Find("Canvas").transform);
-		connectionsText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
+		textObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
     }
 
     // Update is called once per frame
@@ -40,7 +37,7 @@ public class TreeNode : MonoBehaviour
 		{
 			connections.Add(otherNode);
 			currentConnections += 1;
-			connectionsText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
+			textObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
 			return true;
 		}
 

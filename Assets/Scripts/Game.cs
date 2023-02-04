@@ -47,7 +47,7 @@ public class Game : MonoBehaviour
 
 	void NodeClicked(TreeNode node)
 	{
-		Debug.Log("Node clicked");
+		Debug.Log("Node clicked received");
 		if (!drawing)
 		{
 			originNode = node;
