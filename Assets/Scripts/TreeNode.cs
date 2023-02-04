@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TreeNode : MonoBehaviour
 {
@@ -17,8 +18,8 @@ public class TreeNode : MonoBehaviour
     void Start()
     {
         Debug.Log("Node start");
-		connectionsText = Instantiate(textPrefab, new Vector3(transform.position.x, transform.position.y, -1), transform.rotation);
-		connectionsText.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
+		connectionsText = Instantiate(textPrefab, Camera.main.WorldToScreenPoint(transform.position), transform.rotation, GameObject.Find("Canvas").transform);
+		connectionsText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
     }
 
     // Update is called once per frame
@@ -39,7 +40,7 @@ public class TreeNode : MonoBehaviour
 		{
 			connections.Add(otherNode);
 			currentConnections += 1;
-			connectionsText.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
+			connectionsText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
 			return true;
 		}
 
