@@ -155,6 +155,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodePrefab: {fileID: 8722378993177170663, guid: 6036b30f54b973341ad6bf00d4e3f69c, type: 3}
   edgePrefab: {fileID: 2729620515606298723, guid: e51589c40526f7a45af29589b584dbdd, type: 3}
+  rangeX: 10
+  rangeY: 5
+  amountCirles: 4
 --- !u!4 &381704972
 Transform:
   m_ObjectHideFlags: 0
@@ -185,6 +188,7 @@ MonoBehaviour:
   cam: {fileID: 519420031}
   minFov: 20
   maxFov: 80
+  camSpeed: 3
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
