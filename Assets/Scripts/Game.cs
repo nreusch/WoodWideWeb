@@ -27,11 +27,6 @@ public class Game : MonoBehaviour
 	[SerializeField] private bool initConnection = false;
 	[SerializeField] GameObject tradeInitiateView;
 
-
-
-
-	public float arrowheadSize = 0.1f;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -156,7 +151,6 @@ public class Game : MonoBehaviour
 		edgeAB = null;
 		nodeA = null;
 		nodeB = null;
-		cancelCurrentConnection();
 	}
 
 	public void tradeResourceFromAToB(int W, int N, int P, int K){
