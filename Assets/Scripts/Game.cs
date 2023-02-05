@@ -42,13 +42,11 @@ public class Game : MonoBehaviour
 
 	void initWorld()
 	{
-		Instantiate(nodePrefab, Camera.main.ScreenToWorldPoint(new Vector3(0.5f * Camera.main.pixelWidth,0.5f * Camera.main.pixelHeight,Camera.main.nearClipPlane)), Quaternion.identity);
 		int amountNodes = 10;
 		float rangeX = 10f;
 		float rangeY = 10f;
 		for (int i = 0; i < amountNodes; i++){
 			Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
-			// Instantiate(nodePrefab, Camera.main.ScreenToWorldPoint(nodeLocation), Quaternion.identity);
 			GameObject node = Instantiate(nodePrefab, nodeLocation, Quaternion.identity, transform);
 			nodes.Add(node);
 		}
