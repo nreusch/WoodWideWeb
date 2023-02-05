@@ -5,11 +5,11 @@ using UnityEngine;
 public class Game : MonoBehaviour
 {
 
-	public GameObject nodePrefab;
+	public TreeNode nodePrefab;
 	public GameObject edgePrefab;
 	Vector3 mousePos;
 
-	private List<GameObject> nodes = new List<GameObject>();
+	private List<TreeNode> nodes = new List<TreeNode>();
 	private List<GameObject> edges = new List<GameObject>();
 	GameObject currentEdge;
 	private bool drawing = false;
@@ -74,7 +74,11 @@ public class Game : MonoBehaviour
 		if(Input.GetMouseButtonDown(1))
 		{
 			Vector3 _mousePos = GetCurrentMousePosition().GetValueOrDefault();
-			GameObject node = Instantiate(nodePrefab, _mousePos, Quaternion.identity, transform);
+			TreeNode node = Instantiate(nodePrefab, _mousePos, Quaternion.identity, transform);
+			node.resourceStorage.Add(Enums.EResource.Water, 10);
+			node.resourceStorage.Add(Enums.EResource.Nitrogen, 10);
+			node.resourceStorage.Add(Enums.EResource.Phosphorus, 10);
+			node.resourceStorage.Add(Enums.EResource.Potassium, 10);
 			nodes.Add(node);
 		}
     }
