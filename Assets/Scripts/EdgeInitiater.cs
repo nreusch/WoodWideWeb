@@ -5,8 +5,7 @@ using TMPro;
 
 public class EdgeInitiater : MonoBehaviour
 {
-    [SerializeField] GameObject tradeInitiateView;
-    private int waterAmount = 0;
+    private int W = 0;
     private int P = 0;
     private int N = 0;
     private int K = 0;
@@ -16,18 +15,19 @@ public class EdgeInitiater : MonoBehaviour
     [SerializeField] TextMeshProUGUI m_K;
 
     public void ResourceInitDone(){
-
+        Game game = this.GetComponent<Game>();
+        game.finishMakingConnections(W, N, P, K);
     }
 
     public void WaterOnClickUp(){
-		waterAmount += 1;
-        m_W.text = waterAmount.ToString();
+		W += 1;
+        m_W.text = W.ToString();
 	}
 
     public void WaterOnClickDown(){
-        if(waterAmount < 1) return;
-		waterAmount -= 1;
-        m_W.text = waterAmount.ToString();
+        if(W < 1) return;
+		W -= 1;
+        m_W.text = W.ToString();
 	}
 
     public void PUp(){
@@ -36,7 +36,7 @@ public class EdgeInitiater : MonoBehaviour
 	}
 
     public void PDown(){
-        if(waterAmount < 1) return;
+        if(W < 1) return;
 		P -= 1;
         m_P.text = P.ToString();
 	}
@@ -53,7 +53,7 @@ public class EdgeInitiater : MonoBehaviour
 	}
 
     public void KUp(){
-		K -= 1;
+		K += 1;
         m_K.text = K.ToString();
 	}
 

@@ -25,6 +25,8 @@ public class Game : MonoBehaviour
  	[SerializeField] private float amountCirles = 4;
 	[SerializeField] private float spaceInBetweenCircles = 5;
 	[SerializeField] private bool initConnection = false;
+	[SerializeField] GameObject tradeInitiateView;
+
 
 
 
@@ -32,6 +34,8 @@ public class Game : MonoBehaviour
     void Start()
     {
 		initWorld();
+					tradeInitiateView.SetActive(false);
+
     }
 
 	void initWorld()
@@ -87,6 +91,8 @@ public class Game : MonoBehaviour
 		else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(nodeA, node))
 		{
 			nodeB = node;
+			tradeInitiateView.SetActive(true);
+
 			// If node is clicked and drawing line -> end drawing line
 			if(nodeA.currentConnections < nodeA.maxConnections && node.currentConnections < node.maxConnections)
 			{
@@ -111,6 +117,12 @@ public class Game : MonoBehaviour
 			currentEdge = null;
 			nodeA = null;
 		}
+	}
+
+	public void finishMakingConnections(int W, int N, int P, int K){
+		tradeInitiateView.SetActive(false);
+		tradeResourceFromAToB(W,N,P,K);
+		Debug.Log("traded resources");
 	}
 
 	public void tradeResourceFromAToB(int W, int N, int P, int K){

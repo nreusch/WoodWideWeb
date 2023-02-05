@@ -206,7 +206,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 23469677}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 381704974}
+        m_TargetAssemblyTypeName: EdgeInitiater, Assembly-CSharp
+        m_MethodName: ResourceInitDone
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &23469677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,6 +774,7 @@ MonoBehaviour:
   amountCirles: 4
   spaceInBetweenCircles: 5
   initConnection: 0
+  tradeInitiateView: {fileID: 1902103356}
 --- !u!4 &381704972
 Transform:
   m_ObjectHideFlags: 0
@@ -805,11 +818,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1b2a0ae9746c84fbeda39cc0df9927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tradeInitiateView: {fileID: 1902103356}
   m_W: {fileID: 88085417}
-  m_P: {fileID: 0}
-  m_N: {fileID: 0}
-  m_K: {fileID: 0}
+  m_P: {fileID: 1597159239}
+  m_N: {fileID: 1632278934}
+  m_K: {fileID: 256706214}
 --- !u!1 &475053766
 GameObject:
   m_ObjectHideFlags: 0
@@ -2525,7 +2537,7 @@ GameObject:
   - component: {fileID: 1902103359}
   - component: {fileID: 1902103358}
   m_Layer: 5
-  m_Name: Image
+  m_Name: TradeInitiateView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
