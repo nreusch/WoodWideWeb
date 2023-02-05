@@ -17,6 +17,7 @@ public class Game : MonoBehaviour
 
 	GameObject currentEdge;
 	private bool drawing = false;
+	private bool trading = false;
 	private TreeNode nodeA;
 	private TreeNode nodeB;
 	private Edge edgeAB;
@@ -91,53 +92,57 @@ public class Game : MonoBehaviour
 
 	void NodeClicked(TreeNode node)
 	{
-		// Debug.Log("Node clicked received");
-		if (!drawing)
+		if(!trading)
 		{
-			nodeA = node;
-			// If node is clicked and not drawing line -> start drawing line
-			drawing = true;
-
-			GameObject edge = Instantiate(edgePrefab);
-			edges.Add(edge);
-			currentEdge = edge;
-
-			initialPos = GetCurrentMousePosition().GetValueOrDefault();
-			LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
-			_lineRenderer.SetPosition(0, initialPos);
-			_lineRenderer.SetPosition(1, initialPos);
-			_lineRenderer.enabled = true;
-			_lineRenderer.material.mainTextureScale = new Vector2(2f,1f);
-		}
-		else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(nodeA, node))
-		{
-			nodeB = node;
-
-			// If node is clicked and drawing line -> end drawing line
-			if(nodeA.currentConnections < nodeA.maxConnections && node.currentConnections < node.maxConnections)
+			// Debug.Log("Node clicked received");
+			if (!drawing)
 			{
-				// if connection already exists, update the connection.
-				if(!connectionExist(nodeA, node)){
-					Edge newEdge = new Edge();
-					newEdge.makeConnection(nodeA, node);
-					listEdges.Add(newEdge);
-					edgeAB = newEdge;
-					tradeInitiateView.SetActive(true);
+				nodeA = node;
+				// If node is clicked and not drawing line -> start drawing line
+				drawing = true;
 
-					nodeA.addConnectionTo(node);
-					node.addConnectionFrom(nodeA);
-				} else{
-					cancelCurrentConnection(); // stop drawing the connection
-					Edge edge = getConnection(nodeA, node); // update the current connection
+				GameObject edge = Instantiate(edgePrefab);
+				edges.Add(edge);
+				currentEdge = edge;
+
+				initialPos = GetCurrentMousePosition().GetValueOrDefault();
+				LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
+				_lineRenderer.SetPosition(0, initialPos);
+				_lineRenderer.SetPosition(1, initialPos);
+				_lineRenderer.enabled = true;
+				_lineRenderer.material.mainTextureScale = new Vector2(2f,1f);
+			}
+			else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(nodeA, node))
+			{
+				nodeB = node;
+
+				// If node is clicked and drawing line -> end drawing line
+				if(nodeA.currentConnections < nodeA.maxConnections && node.currentConnections < node.maxConnections)
+				{
+					// if connection already exists, update the connection.
+					if(!connectionExist(nodeA, node)){
+						Edge newEdge = new Edge();
+						newEdge.makeConnection(nodeA, node);
+						listEdges.Add(newEdge);
+						edgeAB = newEdge;
+						tradeInitiateView.SetActive(true);
+						trading = true;
+
+						nodeA.addConnectionTo(node);
+						node.addConnectionFrom(nodeA);
+					} else{
+						cancelCurrentConnection(); // stop drawing the connection
+						Edge edge = getConnection(nodeA, node); // update the current connection
+					}
 				}
+				else
+				{
+					cancelCurrentConnection(); 
+				}
+				currentEdge = null;
+				
+				drawing = false;
 			}
-			else
-			{
-				cancelCurrentConnection(); 
-			}
-			currentEdge = null;
-			
-			drawing = false;
 		}
 	}
 
@@ -167,6 +172,8 @@ public class Game : MonoBehaviour
         // update layout
 		nodeA.updateLayout();
 		nodeB.updateLayout();
+
+		trading = false;
     }
 
 
