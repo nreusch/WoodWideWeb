@@ -76,9 +76,6 @@ public class Game : MonoBehaviour
 			Vector3 _currentPosition = GetCurrentMousePosition().GetValueOrDefault();
 			LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
 
-			//float percentSize = (float) (arrowheadSize / Vector3.Distance (initialPos, _currentPosition));
-			float percentSize = arrowheadSize;
-
 			_lineRenderer.SetPosition(0, initialPos);
 			_lineRenderer.SetPosition(1, _currentPosition);
 
