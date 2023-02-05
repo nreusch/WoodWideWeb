@@ -39,7 +39,7 @@ public class Controls : MonoBehaviour
 		if (Input.GetMouseButton(2))
 		{
 			Vector3 delta = Input.mousePosition - lastPosition;
-			transform.Translate(delta.x * mouseSensitivity, delta.y * mouseSensitivity, 0);
+			cam.transform.Translate(delta.x * mouseSensitivity, delta.y * mouseSensitivity, 0);
 			lastPosition = Input.mousePosition;
 		}
 	}
