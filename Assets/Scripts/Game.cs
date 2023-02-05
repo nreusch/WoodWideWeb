@@ -27,13 +27,22 @@ public class Game : MonoBehaviour
 
 	void initWorld()
 	{
-		GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
-		nodes.Add(node.GetComponent<TreeNode>());
+		// GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
+		// nodes.Add(node.GetComponent<TreeNode>());
 
 		for (int i = 0; i < amountCirles; i++){
 			Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
 			SpawnPrefabOnCircle2D(nodePrefab, 3f);
 		}
+	}
+
+	void InstantiateNode(Vector3 pos){
+		TreeNode node = Instantiate(nodePrefab, pos, Quaternion.identity, transform).GetComponent<TreeNode>();
+		node.StoreResource(Enums.EResource.Water, 10);
+		node.StoreResource(Enums.EResource.Nitrogen, 10);
+		node.StoreResource(Enums.EResource.Phosphorus, 10);
+		node.StoreResource(Enums.EResource.Potassium, 10);
+		nodes.Add(node);
 	}
 
 	void SpawnPrefabOnCircle2D(GameObject nodePrefab, float radius)
@@ -53,9 +62,10 @@ public class Game : MonoBehaviour
 		randomPos.y = Mathf.Sin(dotProductAngle * (Random.value > 0.5f ? 1f : -1f)) * radius + centerPoint.y;
 		randomPos.z = transform.position.z;
 		
-		GameObject node = Instantiate(nodePrefab, randomPos, Quaternion.identity);;
-		node.transform.position = randomPos;
-		nodes.Add(node.GetComponent<TreeNode>());
+		InstantiateNode(randomPos);
+		// GameObject node = Instantiate(nodePrefab, randomPos, Quaternion.identity);;
+		// node.transform.position = randomPos;
+		// nodes.Add(node.GetComponent<TreeNode>());
 	}
 
     // Update is called once per frame
@@ -72,15 +82,9 @@ public class Game : MonoBehaviour
 		if(Input.GetMouseButtonDown(1))
 		{
 			Vector3 _mousePos = GetCurrentMousePosition().GetValueOrDefault();
-			TreeNode node = Instantiate(nodePrefab, _mousePos, Quaternion.identity, transform).GetComponent<TreeNode>();
-			node.StoreResource(Enums.EResource.Water, 10);
-			node.StoreResource(Enums.EResource.Nitrogen, 10);
-			node.StoreResource(Enums.EResource.Phosphorus, 10);
-			node.StoreResource(Enums.EResource.Potassium, 10);
-			nodes.Add(node);
+			InstantiateNode(_mousePos);
 		}
     }
-
 
 
 	void NodeClicked(TreeNode node)
