@@ -101,7 +101,7 @@ public class Game : MonoBehaviour
 			}
 			else
 			{
-				cancelCurrentConnection();
+				cancelCurrentConnection(); 
 			}
 			drawing = false;
 			currentEdge = null;
