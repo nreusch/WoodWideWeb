@@ -36,19 +36,28 @@ public class TreeNode : MonoBehaviour
 		UpdateCurrentStateResource(Enums.EResource.Nitrogen, N);
 		UpdateCurrentStateResource(Enums.EResource.Phosphorus, P);
 		UpdateCurrentStateResource(Enums.EResource.Potassium, K);
+
+		updateLayout();
 	}
 
 	public void tradeResourceToNodeB(TreeNode nodeB, Enums.EResource res, int amount){
 		TreeNode nodeA = this;
 		nodeA.decreaseCurrentStateResource(res, amount);
 		nodeB.increaseCurrentStateResource(res, amount);
-		updateLayout();
+		nodeA.updateLayout();
+		nodeB.updateLayout();
+		Debug.Log("trade done");
+		Debug.Log(nodeA.getAmountOfResource(Enums.EResource.Water));
+	}
+
+	public int getAmountOfResource(Enums.EResource res){
+		return resourceCurrent[res];
 	}
 
 	public void updateLayout(){
 		TextMeshPro tmp_object = resourceTextObject.GetComponent<TextMeshPro>();
 		tmp_object.text = "";
-		foreach(KeyValuePair<Enums.EResource,int> kvp in resourceBasis)
+		foreach(KeyValuePair<Enums.EResource,int> kvp in resourceCurrent)
 		{
 			tmp_object.text += string.Format("<sprite=\"R\" index=\"{0}\"> {1}\n", (int) kvp.Key, kvp.Value);
 		}
@@ -86,13 +95,6 @@ public class TreeNode : MonoBehaviour
 		else
 		{
 			resourceBasis[res] += amount;
-		}
-
-		TextMeshPro tmp_object = resourceTextObject.GetComponent<TextMeshPro>();
-		tmp_object.text = "";
-		foreach(KeyValuePair<Enums.EResource,int> kvp in resourceBasis)
-		{
-			tmp_object.text += string.Format("<sprite=\"R\" index=\"{0}\"> {1}\n", (int) kvp.Key, kvp.Value);
 		}
 	}
 

@@ -84,6 +84,7 @@ public class Game : MonoBehaviour
 			{
 				originNode.addConnectionTo(node);
 				node.addConnectionFrom(originNode);
+				originNode.tradeResourceToNodeB(node, Enums.EResource.Water, 5); // HARDCODED
 			}
 			else
 			{
