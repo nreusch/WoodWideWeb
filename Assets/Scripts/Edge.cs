@@ -22,10 +22,25 @@ public class Edge
 		nodeB.updateLayout();
     }
 
-    public bool isConnectrionFromAToB(TreeNode nodeA, TreeNode nodeB){
-        if (this.nodeA == nodeA && this.nodeB == nodeB)
+    public bool isConnectrionFromAToB(TreeNode nodeA, TreeNode nodeB, Enums.EResource res){
+        if (this.nodeA == nodeA && this.nodeB == nodeB && this.resource == res)
             return true;
         return false;
+    }
+
+    public void updateAmount(int amount){
+        // reset to original state
+        nodeA.increaseCurrentStateResource(this.resource, this.amount);
+		nodeB.decreaseCurrentStateResource(this.resource, this.amount);
+
+        // update to new state
+        this.amount = amount;
+        nodeA.decreaseCurrentStateResource(this.resource, amount);
+		nodeB.increaseCurrentStateResource(this.resource, amount);
+
+        // update layout
+		nodeA.updateLayout();
+		nodeB.updateLayout();
     }
 
 }

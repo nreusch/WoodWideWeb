@@ -85,12 +85,19 @@ public class Game : MonoBehaviour
 			// If node is clicked and drawing line -> end drawing line
 			if(originNode.currentConnections < originNode.maxConnections && node.currentConnections < node.maxConnections)
 			{
-				originNode.addConnectionTo(node);
-				node.addConnectionFrom(originNode);
+				// if connection already exists, update the connection.
+				if(!connectionExist(originNode, node, Enums.EResource.Water)){
+					Edge newEdge = new Edge();
+					newEdge.makeConnection(originNode, node, Enums.EResource.Water, 5);
+					listEdges.Add(newEdge);
 
-				Edge newEdge = new Edge();
-				newEdge.makeConnection(originNode, node, Enums.EResource.Water, 5);
-				listEdges.Add(newEdge);
+					originNode.addConnectionTo(node);
+					node.addConnectionFrom(originNode);
+				} else{
+					Edge edge = getConnection(originNode, node, Enums.EResource.Water);
+					edge.updateAmount(2);
+				}
+				
 				// originNode.tradeResourceToNodeB(node, Enums.EResource.Water, 5); // HARDCODED
 			}
 			else
@@ -104,12 +111,21 @@ public class Game : MonoBehaviour
 		}
 	}
 
-	private bool doesConnectionExist(TreeNode a, TreeNode b){
+	private bool connectionExist(TreeNode a, TreeNode b, Enums.EResource res){
 		foreach (Edge edge in listEdges) {
-			if (edge.isConnectrionFromAToB(a, b)) return true;
+			if (edge.isConnectrionFromAToB(a, b, res)) return true;
 		}
 		return false;
 	}
+
+	private Edge getConnection(TreeNode a, TreeNode b, Enums.EResource res){
+		foreach (Edge edge in listEdges) {
+			if (edge.isConnectrionFromAToB(a, b, res)) return edge;
+		}
+		return null;
+	}
+
+
 
 	private Vector3? GetCurrentMousePosition()
 	{
