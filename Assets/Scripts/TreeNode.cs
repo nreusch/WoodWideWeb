@@ -10,6 +10,8 @@ public class TreeNode : MonoBehaviour
 
 	public GameObject textObject;
 
+	public Dictionary<Enums.EResource,int> resourceStorage = new Dictionary<Enums.EResource, int>();
+
 	private List<TreeNode> connections = new List<TreeNode>();
 
     // Start is called before the first frame update
