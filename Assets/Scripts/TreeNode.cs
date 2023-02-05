@@ -8,7 +8,8 @@ public class TreeNode : MonoBehaviour
 	public int maxConnections;
 	public int currentConnections = 0;
 
-	public GameObject textObject;
+	public GameObject connectionTextObject;
+	public GameObject resourceTextObject;
 
 	public Dictionary<Enums.EResource,int> resourceStorage = new Dictionary<Enums.EResource, int>();
 
@@ -18,8 +19,29 @@ public class TreeNode : MonoBehaviour
     void Start()
     {
         Debug.Log("Node start");
-		textObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
+		connectionTextObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
+
+		
     }
+
+	public void StoreResource(Enums.EResource res, int amount)
+	{
+		if(resourceStorage.ContainsKey(res))
+		{
+			resourceStorage.Add(res, amount);
+		}
+		else
+		{
+			resourceStorage[res] += amount;
+		}
+
+		TextMeshPro tmp_object = resourceTextObject.GetComponent<TextMeshPro>();
+		tmp_object.text = "";
+		foreach(KeyValuePair<Enums.EResource,int> kvp in resourceStorage)
+		{
+			tmp_object.text += string.Format("<sprite=\"ResourceSprites\" index=\"{0}\"> {1}\n", kvp.Key, kvp.Value);
+		}
+	}
 
     // Update is called once per frame
     void Update()
@@ -39,7 +61,7 @@ public class TreeNode : MonoBehaviour
 		{
 			connections.Add(otherNode);
 			currentConnections += 1;
-			textObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
+			connectionTextObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
 			return true;
 		}
 

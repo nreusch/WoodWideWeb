@@ -211,7 +211,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sample text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -434,7 +434,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxConnections: 3
   currentConnections: 0
-  textObject: {fileID: 5106886237513286313}
+  connectionTextObject: {fileID: 5106886237513286313}
+  resourceTextObject: {fileID: 5856422025110839898}
 --- !u!23 &3395133732758904340
 MeshRenderer:
   m_ObjectHideFlags: 0

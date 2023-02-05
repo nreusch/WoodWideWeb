@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: EdgeLayer
+    uniqueID: 2409043787
+    locked: 0
+  - name: NodeLayer
+    uniqueID: 1057908101
+    locked: 0
+  - name: TextLayer
+    uniqueID: 3125396733
+    locked: 0
