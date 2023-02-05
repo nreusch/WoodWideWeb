@@ -14,15 +14,15 @@ public class Controls : MonoBehaviour
 
     void Update()
     {
-        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        if(scrollInput > 0)
-            UpdateFov(cam.fieldOfView - 1 * camSpeed);
-        else if(scrollInput < 0)
-            UpdateFov(cam.fieldOfView + 1 * camSpeed);    
+          UpdateCamField();
     }
 
-    void UpdateFov(float newFov)
+    void UpdateCamField()
     {
-        cam.fieldOfView = Mathf.Clamp(newFov, minFov, maxFov);
+        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+        if(scrollInput > 0)
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - 1 * camSpeed, minFov, maxFov);
+        else if(scrollInput < 0)
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + 1 * camSpeed, minFov, maxFov);
     }
 }
