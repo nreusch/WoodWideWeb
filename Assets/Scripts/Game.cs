@@ -14,12 +14,51 @@ public class Game : MonoBehaviour
 	GameObject currentEdge;
 	private bool drawing = false;
 	private TreeNode originNode;
+	
+	[SerializeField] private float rangeX = 10;
+    [SerializeField] private float rangeY = 5;
+ 	[SerializeField] private float amountCirles = 4;
 
     // Start is called before the first frame update
     void Start()
     {
 		initWorld();
     }
+
+	void initWorld()
+	{
+		// GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
+		// nodes.Add(node);
+
+		// for (int i = 0; i < amountCirles; i++){
+		// 	Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
+		// 	// GameObject node = Instantiate(nodePrefab, nodeLocation, Quaternion.identity, transform);
+		// 	SpawnPrefabOnCircle2D(nodePrefab, 3f);
+		// 	nodes.Add(node);
+		// }
+	}
+
+	void SpawnPrefabOnCircle2D(TreeNode nodePrefab, float radius)
+	{
+		Vector3 randomPos = Random.insideUnitSphere * radius;
+		randomPos += transform.position;
+		randomPos.y = 0f;
+		Vector3 centerPoint = new Vector3(0,0,0);
+		
+		Vector3 direction = randomPos - transform.position;
+		direction.Normalize();
+		
+		float dotProduct = Vector3.Dot(transform.forward, direction);
+		float dotProductAngle = Mathf.Acos(dotProduct / transform.forward.magnitude * direction.magnitude);
+		
+		randomPos.x = Mathf.Cos(dotProductAngle) * radius + centerPoint.x;
+		randomPos.y = Mathf.Sin(dotProductAngle * (Random.value > 0.5f ? 1f : -1f)) * radius + centerPoint.y;
+		randomPos.z = transform.position.z;
+		
+		TreeNode node = Instantiate(nodePrefab, randomPos, Quaternion.identity);
+		node.transform.position = randomPos;
+		nodes.Add(node);
+	}
 
     // Update is called once per frame
     void Update()
@@ -44,23 +83,7 @@ public class Game : MonoBehaviour
 		}
     }
 
-	void initWorld()
-	{
-		Instantiate(nodePrefab, Camera.main.ScreenToWorldPoint(new Vector3(0.5f * Camera.main.pixelWidth,0.5f * Camera.main.pixelHeight,Camera.main.nearClipPlane)), Quaternion.identity, transform);
-		int amountNodes = 10;
-		float rangeX = 10f;
-		float rangeY = 10f;
-		for (int i = 0; i < amountNodes; i++){
-			Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
-			// Instantiate(nodePrefab, Camera.main.ScreenToWorldPoint(nodeLocation), Quaternion.identity);
-			TreeNode node = Instantiate(nodePrefab, nodeLocation, Quaternion.identity, transform).GetComponent<TreeNode>();
-			node.StoreResource(Enums.EResource.Water, 10);
-			node.StoreResource(Enums.EResource.Nitrogen, 10);
-			node.StoreResource(Enums.EResource.Phosphorus, 10);
-			node.StoreResource(Enums.EResource.Potassium, 10);
-			nodes.Add(node);
-		}
-	}
+
 
 	void NodeClicked(TreeNode node)
 	{

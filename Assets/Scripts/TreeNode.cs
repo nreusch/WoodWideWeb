@@ -26,7 +26,7 @@ public class TreeNode : MonoBehaviour
 
 	public void StoreResource(Enums.EResource res, int amount)
 	{
-		if(resourceStorage.ContainsKey(res))
+		if(!resourceStorage.ContainsKey(res))
 		{
 			resourceStorage.Add(res, amount);
 		}
