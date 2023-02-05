@@ -17,7 +17,7 @@ public class TreeNode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Node start");
+        // Debug.Log("Node start");
 		textObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
     }
 
@@ -29,7 +29,7 @@ public class TreeNode : MonoBehaviour
 
 	void OnMouseDown()
 	{
-		Debug.Log("Node clicked");
+		// Debug.Log("Node clicked");
 		SendMessageUpwards("NodeClicked", this.GetComponent<TreeNode>());
 	}
 
