@@ -19,6 +19,8 @@ public class Game : MonoBehaviour
 	[SerializeField] private float rangeX = 10;
     [SerializeField] private float rangeY = 5;
  	[SerializeField] private float amountCirles = 4;
+	[SerializeField] private float spaceInBetweenCircles = 5;
+
 
 	public float arrowheadSize = 0.1f;
 
@@ -33,9 +35,13 @@ public class Game : MonoBehaviour
 		// GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
 		// nodes.Add(node.GetComponent<TreeNode>());
 
-		for (int i = 0; i < amountCirles; i++){
-			Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
-			SpawnPrefabOnCircle2D(nodePrefab, 3f);
+		for (int circleI = 0; circleI < amountCirles; circleI++){
+			int nodesOnCircle = 10+ 4*(2^circleI);
+			float radius = circleI * spaceInBetweenCircles;
+			for (int i = 0; i < nodesOnCircle; i++){
+				Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
+				SpawnPrefabOnCircle2D(nodePrefab, radius);
+			}
 		}
 	}
 
@@ -66,9 +72,6 @@ public class Game : MonoBehaviour
 		randomPos.z = transform.position.z;
 		
 		InstantiateNode(randomPos);
-		// GameObject node = Instantiate(nodePrefab, randomPos, Quaternion.identity);;
-		// node.transform.position = randomPos;
-		// nodes.Add(node.GetComponent<TreeNode>());
 	}
 
     // Update is called once per frame
