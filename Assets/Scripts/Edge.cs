@@ -7,40 +7,40 @@ public class Edge
 {
     TreeNode nodeA;
     TreeNode nodeB;
-    Enums.EResource resource;
-    int amount;
+    public Dictionary<Enums.EResource,int> resources = new Dictionary<Enums.EResource, int>();
 
-    public void makeConnection(TreeNode nodeA, TreeNode nodeB, Enums.EResource res, int amount){
+    public void makeConnection(TreeNode nodeA, TreeNode nodeB){
         this.nodeA = nodeA;
         this.nodeB = nodeB;
-        this.resource = res;
-        this.amount = amount;
-
-        nodeA.decreaseCurrentStateResource(res, amount);
-		nodeB.increaseCurrentStateResource(res, amount);
-		nodeA.updateLayout();
-		nodeB.updateLayout();
     }
 
-    public bool isConnectrionFromAToB(TreeNode nodeA, TreeNode nodeB, Enums.EResource res){
-        if (this.nodeA == nodeA && this.nodeB == nodeB && this.resource == res)
+    public void setTradeResources(int W, int N, int P, int K){
+        setResource(Enums.EResource.Water, W);
+		setResource(Enums.EResource.Nitrogen, N);
+		setResource(Enums.EResource.Phosphorus, P);
+		setResource(Enums.EResource.Potassium, K);
+    }
+
+    public Dictionary<Enums.EResource,int> getTradeResources(){
+        return resources;
+    }
+
+    public void setResource(Enums.EResource res, int amount)
+	{
+		if(!resources.ContainsKey(res))
+		{
+			resources.Add(res, amount);
+		}
+		else
+		{
+			resources[res] = amount;
+		}
+	}
+
+
+    public bool isConnectrionFromAToB(TreeNode nodeA, TreeNode nodeB){
+        if (this.nodeA == nodeA && this.nodeB == nodeB)
             return true;
         return false;
     }
-
-    public void updateAmount(int amount){
-        // reset to original state
-        nodeA.increaseCurrentStateResource(this.resource, this.amount);
-		nodeB.decreaseCurrentStateResource(this.resource, this.amount);
-
-        // update to new state
-        this.amount = amount;
-        nodeA.decreaseCurrentStateResource(this.resource, amount);
-		nodeB.increaseCurrentStateResource(this.resource, amount);
-
-        // update layout
-		nodeA.updateLayout();
-		nodeB.updateLayout();
-    }
-
 }

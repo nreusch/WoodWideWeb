@@ -73,6 +73,22 @@ public class TreeNode : MonoBehaviour
 		resourceCurrent[res] += amount;	
 	}
 
+	public void decreaseCurrentStateResources(int W, int N, int P, int K)
+	{
+		resourceCurrent[Enums.EResource.Water] -= W;
+		resourceCurrent[Enums.EResource.Nitrogen] -= N;	
+		resourceCurrent[Enums.EResource.Phosphorus] -= P;	
+		resourceCurrent[Enums.EResource.Potassium] -= K;	
+	}
+
+	public void increaseCurrentStateResources(int W, int N, int P, int K)
+	{
+		resourceCurrent[Enums.EResource.Water] += W;
+		resourceCurrent[Enums.EResource.Nitrogen] += N;	
+		resourceCurrent[Enums.EResource.Phosphorus] += P;	
+		resourceCurrent[Enums.EResource.Potassium] += K;	
+	}
+
 	public void UpdateCurrentStateResource(Enums.EResource res, int amount)
 	{
 		if(!resourceCurrent.ContainsKey(res))

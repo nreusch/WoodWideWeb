@@ -16,12 +16,16 @@ public class Game : MonoBehaviour
 
 	GameObject currentEdge;
 	private bool drawing = false;
-	private TreeNode originNode;
+	private TreeNode nodeA;
+	private TreeNode nodeB;
+
 	
 	[SerializeField] private float rangeX = 10;
     [SerializeField] private float rangeY = 5;
  	[SerializeField] private float amountCirles = 4;
 	[SerializeField] private float spaceInBetweenCircles = 5;
+	[SerializeField] private bool initConnection = false;
+
 
 
     // Start is called before the first frame update
@@ -66,7 +70,7 @@ public class Game : MonoBehaviour
 		// Debug.Log("Node clicked received");
 		if (!drawing)
 		{
-			originNode = node;
+			nodeA = node;
 			// If node is clicked and not drawing line -> start drawing line
 			drawing = true;
 
@@ -80,23 +84,23 @@ public class Game : MonoBehaviour
 			_lineRenderer.SetPosition(1, _initialPosition);
 			_lineRenderer.enabled = true;
 		}
-		else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(originNode, node))
+		else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(nodeA, node))
 		{
+			nodeB = node;
 			// If node is clicked and drawing line -> end drawing line
-			if(originNode.currentConnections < originNode.maxConnections && node.currentConnections < node.maxConnections)
+			if(nodeA.currentConnections < nodeA.maxConnections && node.currentConnections < node.maxConnections)
 			{
 				// if connection already exists, update the connection.
-				if(!connectionExist(originNode, node, Enums.EResource.Water)){
+				if(!connectionExist(nodeA, node)){
 					Edge newEdge = new Edge();
-					newEdge.makeConnection(originNode, node, Enums.EResource.Water, 5);
+					newEdge.makeConnection(nodeA, node);
 					listEdges.Add(newEdge);
 
-					originNode.addConnectionTo(node);
-					node.addConnectionFrom(originNode);
+					nodeA.addConnectionTo(node);
+					node.addConnectionFrom(nodeA);
 				} else{
 					cancelCurrentConnection(); // stop drawing the connection
-					Edge edge = getConnection(originNode, node, Enums.EResource.Water); // update the current connection
-					edge.updateAmount(2); // HARDCODED
+					Edge edge = getConnection(nodeA, node); // update the current connection
 				}
 			}
 			else
@@ -105,25 +109,44 @@ public class Game : MonoBehaviour
 			}
 			drawing = false;
 			currentEdge = null;
-			originNode = null;
+			nodeA = null;
 		}
 	}
+
+	public void tradeResourceFromAToB(int W, int N, int P, int K){
+        Edge edge = getConnection(nodeA, nodeB);
+		Dictionary<Enums.EResource,int> resources = edge.getTradeResources();
+
+		// reset to original state
+        nodeA.decreaseCurrentStateResources(resources[Enums.EResource.Water],
+                                            resources[Enums.EResource.Nitrogen],
+                                            resources[Enums.EResource.Phosphorus],
+                                            resources[Enums.EResource.Potassium]);
+		nodeB.increaseCurrentStateResources(resources[Enums.EResource.Water],
+                                            resources[Enums.EResource.Nitrogen],
+                                            resources[Enums.EResource.Phosphorus],
+                                            resources[Enums.EResource.Potassium]);
+        // update layout
+		nodeA.updateLayout();
+		nodeB.updateLayout();
+    }
+
 
 	private void cancelCurrentConnection(){
 		LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
 		Destroy(_lineRenderer);
 	}
 
-	private bool connectionExist(TreeNode a, TreeNode b, Enums.EResource res){
+	private bool connectionExist(TreeNode a, TreeNode b){
 		foreach (Edge edge in listEdges) {
-			if (edge.isConnectrionFromAToB(a, b, res)) return true;
+			if (edge.isConnectrionFromAToB(a, b)) return true;
 		}
 		return false;
 	}
 
-	private Edge getConnection(TreeNode a, TreeNode b, Enums.EResource res){
+	private Edge getConnection(TreeNode a, TreeNode b){
 		foreach (Edge edge in listEdges) {
-			if (edge.isConnectrionFromAToB(a, b, res)) return edge;
+			if (edge.isConnectrionFromAToB(a, b)) return edge;
 		}
 		return null;
 	}
