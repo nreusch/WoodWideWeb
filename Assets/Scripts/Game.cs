@@ -112,7 +112,7 @@ public class Game : MonoBehaviour
 			if(originNode.currentConnections < originNode.maxConnections && node.currentConnections < node.maxConnections)
 			{
 				originNode.addConnectionTo(node);
-				node.addConnectionTo(originNode);
+				node.addConnectionFrom(originNode);
 				
 			}
 			else

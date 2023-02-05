@@ -13,7 +13,8 @@ public class TreeNode : MonoBehaviour
 
 	public Dictionary<Enums.EResource,int> resourceStorage = new Dictionary<Enums.EResource, int>();
 
-	private List<TreeNode> connections = new List<TreeNode>();
+	private List<TreeNode> outgoingConnections = new List<TreeNode>();
+	private List<TreeNode> incomingConnections = new List<TreeNode>();
 
     // Start is called before the first frame update
     void Start()
@@ -59,7 +60,20 @@ public class TreeNode : MonoBehaviour
 	{
 		if(currentConnections < maxConnections)
 		{
-			connections.Add(otherNode);
+			outgoingConnections.Add(otherNode);
+			currentConnections += 1;
+			connectionTextObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
+			return true;
+		}
+
+		return false;
+	}
+
+	public bool addConnectionFrom(TreeNode otherNode)
+	{
+		if(currentConnections < maxConnections)
+		{
+			incomingConnections.Add(otherNode);
 			currentConnections += 1;
 			connectionTextObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
 			return true;
