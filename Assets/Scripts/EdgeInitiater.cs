@@ -36,7 +36,7 @@ public class EdgeInitiater : MonoBehaviour
 	}
 
     public void PDown(){
-        if(W < 1) return;
+        if(P < 1) return;
 		P -= 1;
         m_P.text = P.ToString();
 	}
