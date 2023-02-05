@@ -18,6 +18,7 @@ public class Game : MonoBehaviour
 	private bool drawing = false;
 	private TreeNode nodeA;
 	private TreeNode nodeB;
+	private Edge edgeAB;
 
 	
 	[SerializeField] private float rangeX = 10;
@@ -34,7 +35,7 @@ public class Game : MonoBehaviour
     void Start()
     {
 		initWorld();
-					tradeInitiateView.SetActive(false);
+		tradeInitiateView.SetActive(false);
 
     }
 
@@ -91,7 +92,6 @@ public class Game : MonoBehaviour
 		else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(nodeA, node))
 		{
 			nodeB = node;
-			tradeInitiateView.SetActive(true);
 
 			// If node is clicked and drawing line -> end drawing line
 			if(nodeA.currentConnections < nodeA.maxConnections && node.currentConnections < node.maxConnections)
@@ -101,6 +101,8 @@ public class Game : MonoBehaviour
 					Edge newEdge = new Edge();
 					newEdge.makeConnection(nodeA, node);
 					listEdges.Add(newEdge);
+					edgeAB = newEdge;
+					tradeInitiateView.SetActive(true);
 
 					nodeA.addConnectionTo(node);
 					node.addConnectionFrom(nodeA);
@@ -113,9 +115,9 @@ public class Game : MonoBehaviour
 			{
 				cancelCurrentConnection(); 
 			}
-			drawing = false;
 			currentEdge = null;
-			nodeA = null;
+			
+			drawing = false;
 		}
 	}
 
@@ -123,11 +125,16 @@ public class Game : MonoBehaviour
 		tradeInitiateView.SetActive(false);
 		tradeResourceFromAToB(W,N,P,K);
 		Debug.Log("traded resources");
+		edgeAB = null;
+		nodeA = null;
+		nodeB = null;
+		cancelCurrentConnection();
 	}
 
 	public void tradeResourceFromAToB(int W, int N, int P, int K){
-        Edge edge = getConnection(nodeA, nodeB);
-		Dictionary<Enums.EResource,int> resources = edge.getTradeResources();
+		edgeAB.setTradeResources(W,N,P,K);
+		Dictionary<Enums.EResource,int> resources = edgeAB.getTradeResources();
+
 
 		// reset to original state
         nodeA.decreaseCurrentStateResources(resources[Enums.EResource.Water],
