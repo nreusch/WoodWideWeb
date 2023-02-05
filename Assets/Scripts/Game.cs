@@ -14,12 +14,51 @@ public class Game : MonoBehaviour
 	GameObject currentEdge;
 	private bool drawing = false;
 	private TreeNode originNode;
+	
+	[SerializeField] private float rangeX = 10;
+    [SerializeField] private float rangeY = 5;
+ 	[SerializeField] private float amountCirles = 4;
 
     // Start is called before the first frame update
     void Start()
     {
 		initWorld();
     }
+
+	void initWorld()
+	{
+		GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
+		nodes.Add(node);
+
+		for (int i = 0; i < amountNodes; i++){
+			Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
+			// GameObject node = Instantiate(nodePrefab, nodeLocation, Quaternion.identity, transform);
+			SpawnPrefabOnCircle2D(nodePrefab, 3f);
+			nodes.Add(node);
+		}
+	}
+
+	void SpawnPrefabOnCircle2D(GameObject nodePrefab, float radius)
+	{
+		Vector3 randomPos = Random.insideUnitSphere * radius;
+		randomPos += transform.position;
+		randomPos.y = 0f;
+		Vector3 centerPoint = new Vector3(0,0,0);
+		
+		Vector3 direction = randomPos - transform.position;
+		direction.Normalize();
+		
+		float dotProduct = Vector3.Dot(transform.forward, direction);
+		float dotProductAngle = Mathf.Acos(dotProduct / transform.forward.magnitude * direction.magnitude);
+		
+		randomPos.x = Mathf.Cos(dotProductAngle) * radius + centerPoint.x;
+		randomPos.y = Mathf.Sin(dotProductAngle * (Random.value > 0.5f ? 1f : -1f)) * radius + centerPoint.y;
+		randomPos.z = transform.position.z;
+		
+		GameObject node = Instantiate(nodePrefab, randomPos, Quaternion.identity);
+		node.transform.position = randomPos;
+		nodes.Add(node);
+	}
 
     // Update is called once per frame
     void Update()
@@ -40,17 +79,7 @@ public class Game : MonoBehaviour
 		}
     }
 
-	void initWorld()
-	{
-		int amountNodes = 10;
-		float rangeX = 10f;
-		float rangeY = 10f;
-		for (int i = 0; i < amountNodes; i++){
-			Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
-			GameObject node = Instantiate(nodePrefab, nodeLocation, Quaternion.identity, transform);
-			nodes.Add(node);
-		}
-	}
+
 
 	void NodeClicked(TreeNode node)
 	{
