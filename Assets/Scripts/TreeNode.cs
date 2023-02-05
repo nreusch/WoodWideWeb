@@ -5,13 +5,15 @@ using TMPro;
 
 public class TreeNode : MonoBehaviour
 {
-	public int maxConnections;
+	[SerializeField] public float maxConnections = 3;
 	public int currentConnections = 0;
 
 	public GameObject connectionTextObject;
 	public GameObject resourceTextObject;
 
-	public Dictionary<Enums.EResource,int> resourceStorage = new Dictionary<Enums.EResource, int>();
+	public Dictionary<Enums.EResource,int> resourceBasis = new Dictionary<Enums.EResource, int>();
+	public Dictionary<Enums.EResource,int> resourceCurrent = new Dictionary<Enums.EResource, int>();
+
 
 	private List<TreeNode> outgoingConnections = new List<TreeNode>();
 	private List<TreeNode> incomingConnections = new List<TreeNode>();
@@ -19,26 +21,76 @@ public class TreeNode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Node start");
+        // Debug.Log("Node start");
 		connectionTextObject.GetComponent<TextMesh>().text = string.Format("{0}/{1}", currentConnections, maxConnections);
-
-		
     }
 
-	public void StoreResource(Enums.EResource res, int amount)
+	public void InitResources(int W, int N, int P, int K)
 	{
-		if(!resourceStorage.ContainsKey(res))
+		UpdateBasisResource(Enums.EResource.Water, W);
+		UpdateBasisResource(Enums.EResource.Nitrogen, N);
+		UpdateBasisResource(Enums.EResource.Phosphorus, P);
+		UpdateBasisResource(Enums.EResource.Potassium, K);
+
+		UpdateCurrentStateResource(Enums.EResource.Water, W);
+		UpdateCurrentStateResource(Enums.EResource.Nitrogen, N);
+		UpdateCurrentStateResource(Enums.EResource.Phosphorus, P);
+		UpdateCurrentStateResource(Enums.EResource.Potassium, K);
+	}
+
+	public void tradeResourceToNodeB(TreeNode nodeB, Enums.EResource res, int amount){
+		TreeNode nodeA = this;
+		nodeA.decreaseCurrentStateResource(res, amount);
+		nodeB.increaseCurrentStateResource(res, amount);
+		updateLayout();
+	}
+
+	public void updateLayout(){
+		TextMeshPro tmp_object = resourceTextObject.GetComponent<TextMeshPro>();
+		tmp_object.text = "";
+		foreach(KeyValuePair<Enums.EResource,int> kvp in resourceBasis)
 		{
-			resourceStorage.Add(res, amount);
+			tmp_object.text += string.Format("<sprite=\"R\" index=\"{0}\"> {1}\n", (int) kvp.Key, kvp.Value);
+		}
+	}
+
+	public void decreaseCurrentStateResource(Enums.EResource res, int amount)
+	{
+		resourceCurrent[res] -= amount;	
+	}
+
+	public void increaseCurrentStateResource(Enums.EResource res, int amount)
+	{
+		resourceCurrent[res] += amount;	
+	}
+
+	public void UpdateCurrentStateResource(Enums.EResource res, int amount)
+	{
+		if(!resourceCurrent.ContainsKey(res))
+		{
+			resourceCurrent.Add(res, amount);
 		}
 		else
 		{
-			resourceStorage[res] += amount;
+			resourceCurrent[res] += amount;
+		}
+	}
+
+
+	public void UpdateBasisResource(Enums.EResource res, int amount)
+	{
+		if(!resourceBasis.ContainsKey(res))
+		{
+			resourceBasis.Add(res, amount);
+		}
+		else
+		{
+			resourceBasis[res] += amount;
 		}
 
 		TextMeshPro tmp_object = resourceTextObject.GetComponent<TextMeshPro>();
 		tmp_object.text = "";
-		foreach(KeyValuePair<Enums.EResource,int> kvp in resourceStorage)
+		foreach(KeyValuePair<Enums.EResource,int> kvp in resourceBasis)
 		{
 			tmp_object.text += string.Format("<sprite=\"R\" index=\"{0}\"> {1}\n", (int) kvp.Key, kvp.Value);
 		}
@@ -52,7 +104,6 @@ public class TreeNode : MonoBehaviour
 
 	void OnMouseDown()
 	{
-		Debug.Log("Node clicked");
 		SendMessageUpwards("NodeClicked", this.GetComponent<TreeNode>());
 	}
 

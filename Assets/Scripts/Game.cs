@@ -29,46 +29,14 @@ public class Game : MonoBehaviour
 
 	void initWorld()
 	{
-		// GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
-		// nodes.Add(node.GetComponent<TreeNode>());
-
-		for (int circleI = 0; circleI < amountCirles; circleI++){
-			int nodesOnCircle = 10+ 4*(2^circleI);
-			float radius = circleI * spaceInBetweenCircles;
-			for (int i = 0; i < nodesOnCircle; i++){
-				Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
-				SpawnPrefabOnCircle2D(nodePrefab, radius);
-			}
-		}
+			InstantiateNode(new Vector3(5,0,0));
+			InstantiateNode(new Vector3(0,0,0));
 	}
 
 	void InstantiateNode(Vector3 pos){
 		TreeNode node = Instantiate(nodePrefab, pos, Quaternion.identity, transform).GetComponent<TreeNode>();
-		node.StoreResource(Enums.EResource.Water, 10);
-		node.StoreResource(Enums.EResource.Nitrogen, 10);
-		node.StoreResource(Enums.EResource.Phosphorus, 10);
-		node.StoreResource(Enums.EResource.Potassium, 10);
+		node.InitResources(10,10,10,10);
 		nodes.Add(node);
-	}
-
-	void SpawnPrefabOnCircle2D(GameObject nodePrefab, float radius)
-	{
-		Vector3 randomPos = Random.insideUnitSphere * radius;
-		randomPos += transform.position;
-		randomPos.y = 0f;
-		Vector3 centerPoint = new Vector3(0,0,0);
-		
-		Vector3 direction = randomPos - transform.position;
-		direction.Normalize();
-		
-		float dotProduct = Vector3.Dot(transform.forward, direction);
-		float dotProductAngle = Mathf.Acos(dotProduct / transform.forward.magnitude * direction.magnitude);
-		
-		randomPos.x = Mathf.Cos(dotProductAngle) * radius + centerPoint.x;
-		randomPos.y = Mathf.Sin(dotProductAngle * (Random.value > 0.5f ? 1f : -1f)) * radius + centerPoint.y;
-		randomPos.z = transform.position.z;
-		
-		InstantiateNode(randomPos);
 	}
 
     // Update is called once per frame
@@ -116,7 +84,6 @@ public class Game : MonoBehaviour
 			{
 				originNode.addConnectionTo(node);
 				node.addConnectionFrom(originNode);
-				
 			}
 			else
 			{
