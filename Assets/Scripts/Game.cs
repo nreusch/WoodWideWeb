@@ -12,14 +12,19 @@ public class Game : MonoBehaviour
 
 	private List<TreeNode> nodes = new List<TreeNode>();
 	private List<GameObject> edges = new List<GameObject>();
+	private List<Edge> listEdges = new List<Edge>();
+
+
 	GameObject currentEdge;
 	private bool drawing = false;
-	private TreeNode originNode;
+	private TreeNode nodeA;
+	private TreeNode nodeB;
+
 	
-	[SerializeField] private float rangeX = 10;
-    [SerializeField] private float rangeY = 5;
- 	[SerializeField] private float amountCirles = 4;
-	[SerializeField] private float spaceInBetweenCircles = 5;
+	[SerializeField] private List<int> nodeAmountsPerCircle = new List<int>();
+	[SerializeField] private float spaceInBetweenCircles = 5f;
+	[SerializeField] private bool initConnection = false;
+
 
 
 	public float arrowheadSize = 0.1f;
@@ -32,46 +37,34 @@ public class Game : MonoBehaviour
 
 	void initWorld()
 	{
-		// GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
-		// nodes.Add(node.GetComponent<TreeNode>());
+		Vector3 point = new Vector3(0,0,0);
+		InstantiateNode(point);
 
-		for (int circleI = 0; circleI < amountCirles; circleI++){
-			int nodesOnCircle = 10+ 4*(2^circleI);
-			float radius = circleI * spaceInBetweenCircles;
-			for (int i = 0; i < nodesOnCircle; i++){
-				Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
-				SpawnPrefabOnCircle2D(nodePrefab, radius);
+		for(int j = 0; j < nodeAmountsPerCircle.Count; j++)
+		{
+			float radius = spaceInBetweenCircles * (j+1);
+			for (int i = 0; i < nodeAmountsPerCircle[j]; i++){
+				/* Distance around the circle */  
+				var radians = 2 * Mathf.PI / nodeAmountsPerCircle[j] * i;
+				
+				/* Get the vector direction */ 
+				var vertical = Mathf.Sin(radians);
+				var horizontal = Mathf.Cos(radians); 
+				
+				var spawnDir = new Vector3 (horizontal, vertical, 0);
+				
+				/* Get the spawn position */ 
+				var spawnPos = point + spawnDir * radius; // Radius is just the distance away from the point
+				
+				InstantiateNode(spawnPos);
 			}
 		}
 	}
 
 	void InstantiateNode(Vector3 pos){
 		TreeNode node = Instantiate(nodePrefab, pos, Quaternion.identity, transform).GetComponent<TreeNode>();
-		node.StoreResource(Enums.EResource.Water, 10);
-		node.StoreResource(Enums.EResource.Nitrogen, 10);
-		node.StoreResource(Enums.EResource.Phosphorus, 10);
-		node.StoreResource(Enums.EResource.Potassium, 10);
+		node.InitResources(10,10,10,10);
 		nodes.Add(node);
-	}
-
-	void SpawnPrefabOnCircle2D(GameObject nodePrefab, float radius)
-	{
-		Vector3 randomPos = Random.insideUnitSphere * radius;
-		randomPos += transform.position;
-		randomPos.y = 0f;
-		Vector3 centerPoint = new Vector3(0,0,0);
-		
-		Vector3 direction = randomPos - transform.position;
-		direction.Normalize();
-		
-		float dotProduct = Vector3.Dot(transform.forward, direction);
-		float dotProductAngle = Mathf.Acos(dotProduct / transform.forward.magnitude * direction.magnitude);
-		
-		randomPos.x = Mathf.Cos(dotProductAngle) * radius + centerPoint.x;
-		randomPos.y = Mathf.Sin(dotProductAngle * (Random.value > 0.5f ? 1f : -1f)) * radius + centerPoint.y;
-		randomPos.z = transform.position.z;
-		
-		InstantiateNode(randomPos);
 	}
 
     // Update is called once per frame
@@ -104,7 +97,7 @@ public class Game : MonoBehaviour
 		// Debug.Log("Node clicked received");
 		if (!drawing)
 		{
-			originNode = node;
+			nodeA = node;
 			// If node is clicked and not drawing line -> start drawing line
 			drawing = true;
 
@@ -119,25 +112,74 @@ public class Game : MonoBehaviour
 			_lineRenderer.enabled = true;
 			_lineRenderer.material.mainTextureScale = new Vector2(2f,1f);
 		}
-		else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(originNode, node))
+		else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(nodeA, node))
 		{
+			nodeB = node;
 			// If node is clicked and drawing line -> end drawing line
-			if(originNode.currentConnections < originNode.maxConnections && node.currentConnections < node.maxConnections)
+			if(nodeA.currentConnections < nodeA.maxConnections && node.currentConnections < node.maxConnections)
 			{
-				originNode.addConnectionTo(node);
-				node.addConnectionFrom(originNode);
-				
+				// if connection already exists, update the connection.
+				if(!connectionExist(nodeA, node)){
+					Edge newEdge = new Edge();
+					newEdge.makeConnection(nodeA, node);
+					listEdges.Add(newEdge);
+
+					nodeA.addConnectionTo(node);
+					node.addConnectionFrom(nodeA);
+				} else{
+					cancelCurrentConnection(); // stop drawing the connection
+					Edge edge = getConnection(nodeA, node); // update the current connection
+				}
 			}
 			else
 			{
-				LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
-				Destroy(_lineRenderer);
+				cancelCurrentConnection(); 
 			}
 			drawing = false;
 			currentEdge = null;
-			originNode = null;
+			nodeA = null;
 		}
 	}
+
+	public void tradeResourceFromAToB(int W, int N, int P, int K){
+        Edge edge = getConnection(nodeA, nodeB);
+		Dictionary<Enums.EResource,int> resources = edge.getTradeResources();
+
+		// reset to original state
+        nodeA.decreaseCurrentStateResources(resources[Enums.EResource.Water],
+                                            resources[Enums.EResource.Nitrogen],
+                                            resources[Enums.EResource.Phosphorus],
+                                            resources[Enums.EResource.Potassium]);
+		nodeB.increaseCurrentStateResources(resources[Enums.EResource.Water],
+                                            resources[Enums.EResource.Nitrogen],
+                                            resources[Enums.EResource.Phosphorus],
+                                            resources[Enums.EResource.Potassium]);
+        // update layout
+		nodeA.updateLayout();
+		nodeB.updateLayout();
+    }
+
+
+	private void cancelCurrentConnection(){
+		LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
+		Destroy(_lineRenderer);
+	}
+
+	private bool connectionExist(TreeNode a, TreeNode b){
+		foreach (Edge edge in listEdges) {
+			if (edge.isConnectrionFromAToB(a, b)) return true;
+		}
+		return false;
+	}
+
+	private Edge getConnection(TreeNode a, TreeNode b){
+		foreach (Edge edge in listEdges) {
+			if (edge.isConnectrionFromAToB(a, b)) return edge;
+		}
+		return null;
+	}
+
+
 
 	private Vector3? GetCurrentMousePosition()
 	{
