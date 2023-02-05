@@ -46,8 +46,8 @@ public class TreeNode : MonoBehaviour
 		nodeB.increaseCurrentStateResource(res, amount);
 		nodeA.updateLayout();
 		nodeB.updateLayout();
-		Debug.Log("trade done");
-		Debug.Log(nodeA.getAmountOfResource(Enums.EResource.Water));
+		// Debug.Log("trade done");
+		// Debug.Log(nodeA.getAmountOfResource(Enums.EResource.Water));
 	}
 
 	public int getAmountOfResource(Enums.EResource res){
@@ -111,6 +111,8 @@ public class TreeNode : MonoBehaviour
 
 	public bool addConnectionTo(TreeNode otherNode)
 	{
+		if(outgoingConnections.Contains(otherNode)) return false;
+
 		if(currentConnections < maxConnections)
 		{
 			outgoingConnections.Add(otherNode);
@@ -124,6 +126,8 @@ public class TreeNode : MonoBehaviour
 
 	public bool addConnectionFrom(TreeNode otherNode)
 	{
+		if(incomingConnections.Contains(otherNode)) return false;
+
 		if(currentConnections < maxConnections)
 		{
 			incomingConnections.Add(otherNode);

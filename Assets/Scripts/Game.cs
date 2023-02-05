@@ -11,6 +11,9 @@ public class Game : MonoBehaviour
 
 	private List<TreeNode> nodes = new List<TreeNode>();
 	private List<GameObject> edges = new List<GameObject>();
+	private List<Edge> listEdges = new List<Edge>();
+
+
 	GameObject currentEdge;
 	private bool drawing = false;
 	private TreeNode originNode;
@@ -84,7 +87,11 @@ public class Game : MonoBehaviour
 			{
 				originNode.addConnectionTo(node);
 				node.addConnectionFrom(originNode);
-				originNode.tradeResourceToNodeB(node, Enums.EResource.Water, 5); // HARDCODED
+
+				Edge newEdge = new Edge();
+				newEdge.makeConnection(originNode, node, Enums.EResource.Water, 5);
+				listEdges.Add(newEdge);
+				// originNode.tradeResourceToNodeB(node, Enums.EResource.Water, 5); // HARDCODED
 			}
 			else
 			{
@@ -95,6 +102,13 @@ public class Game : MonoBehaviour
 			currentEdge = null;
 			originNode = null;
 		}
+	}
+
+	private bool doesConnectionExist(TreeNode a, TreeNode b){
+		foreach (Edge edge in listEdges) {
+			if (edge.isConnectrionFromAToB(a, b)) return true;
+		}
+		return false;
 	}
 
 	private Vector3? GetCurrentMousePosition()
