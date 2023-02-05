@@ -94,21 +94,24 @@ public class Game : MonoBehaviour
 					originNode.addConnectionTo(node);
 					node.addConnectionFrom(originNode);
 				} else{
-					Edge edge = getConnection(originNode, node, Enums.EResource.Water);
-					edge.updateAmount(2);
+					cancelCurrentConnection(); // stop drawing the connection
+					Edge edge = getConnection(originNode, node, Enums.EResource.Water); // update the current connection
+					edge.updateAmount(2); // HARDCODED
 				}
-				
-				// originNode.tradeResourceToNodeB(node, Enums.EResource.Water, 5); // HARDCODED
 			}
 			else
 			{
-				LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
-				Destroy(_lineRenderer);
+				cancelCurrentConnection();
 			}
 			drawing = false;
 			currentEdge = null;
 			originNode = null;
 		}
+	}
+
+	private void cancelCurrentConnection(){
+		LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
+		Destroy(_lineRenderer);
 	}
 
 	private bool connectionExist(TreeNode a, TreeNode b, Enums.EResource res){
