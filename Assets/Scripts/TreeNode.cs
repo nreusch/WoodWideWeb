@@ -39,7 +39,7 @@ public class TreeNode : MonoBehaviour
 		tmp_object.text = "";
 		foreach(KeyValuePair<Enums.EResource,int> kvp in resourceStorage)
 		{
-			tmp_object.text += string.Format("<sprite=\"ResourceSprites\" index=\"{0}\"> {1}\n", kvp.Key, kvp.Value);
+			tmp_object.text += string.Format("<sprite=\"R\" index=\"{0}\"> {1}\n", (int) kvp.Key, kvp.Value);
 		}
 	}
 

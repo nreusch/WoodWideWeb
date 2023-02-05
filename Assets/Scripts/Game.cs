@@ -5,7 +5,7 @@ using UnityEngine;
 public class Game : MonoBehaviour
 {
 
-	public TreeNode nodePrefab;
+	public GameObject nodePrefab;
 	public GameObject edgePrefab;
 	Vector3 mousePos;
 
@@ -35,25 +35,29 @@ public class Game : MonoBehaviour
 		if(Input.GetMouseButtonDown(1))
 		{
 			Vector3 _mousePos = GetCurrentMousePosition().GetValueOrDefault();
-			TreeNode node = Instantiate(nodePrefab, _mousePos, Quaternion.identity, transform);
-			node.resourceStorage.Add(Enums.EResource.Water, 10);
-			node.resourceStorage.Add(Enums.EResource.Nitrogen, 10);
-			node.resourceStorage.Add(Enums.EResource.Phosphorus, 10);
-			node.resourceStorage.Add(Enums.EResource.Potassium, 10);
+			TreeNode node = Instantiate(nodePrefab, _mousePos, Quaternion.identity, transform).GetComponent<TreeNode>();
+			node.StoreResource(Enums.EResource.Water, 10);
+			node.StoreResource(Enums.EResource.Nitrogen, 10);
+			node.StoreResource(Enums.EResource.Phosphorus, 10);
+			node.StoreResource(Enums.EResource.Potassium, 10);
 			nodes.Add(node);
 		}
     }
 
 	void initWorld()
 	{
-		Instantiate(nodePrefab, Camera.main.ScreenToWorldPoint(new Vector3(0.5f * Camera.main.pixelWidth,0.5f * Camera.main.pixelHeight,Camera.main.nearClipPlane)), Quaternion.identity);
+		Instantiate(nodePrefab, Camera.main.ScreenToWorldPoint(new Vector3(0.5f * Camera.main.pixelWidth,0.5f * Camera.main.pixelHeight,Camera.main.nearClipPlane)), Quaternion.identity, transform);
 		int amountNodes = 10;
 		float rangeX = 10f;
 		float rangeY = 10f;
 		for (int i = 0; i < amountNodes; i++){
 			Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
 			// Instantiate(nodePrefab, Camera.main.ScreenToWorldPoint(nodeLocation), Quaternion.identity);
-			GameObject node = Instantiate(nodePrefab, nodeLocation, Quaternion.identity, transform);
+			TreeNode node = Instantiate(nodePrefab, nodeLocation, Quaternion.identity, transform).GetComponent<TreeNode>();
+			node.StoreResource(Enums.EResource.Water, 10);
+			node.StoreResource(Enums.EResource.Nitrogen, 10);
+			node.StoreResource(Enums.EResource.Phosphorus, 10);
+			node.StoreResource(Enums.EResource.Potassium, 10);
 			nodes.Add(node);
 		}
 	}
