@@ -8,6 +8,7 @@ public class Game : MonoBehaviour
 	public GameObject nodePrefab;
 	public GameObject edgePrefab;
 	Vector3 mousePos;
+	Vector3 initialPos;
 
 	private List<TreeNode> nodes = new List<TreeNode>();
 	private List<GameObject> edges = new List<GameObject>();
@@ -18,6 +19,8 @@ public class Game : MonoBehaviour
 	[SerializeField] private float rangeX = 10;
     [SerializeField] private float rangeY = 5;
  	[SerializeField] private float amountCirles = 4;
+
+	public float arrowheadSize = 0.1f;
 
     // Start is called before the first frame update
     void Start()
@@ -76,7 +79,13 @@ public class Game : MonoBehaviour
 			// If drawing line -> update end position to mouse position
 			Vector3 _currentPosition = GetCurrentMousePosition().GetValueOrDefault();
 			LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
+
+			//float percentSize = (float) (arrowheadSize / Vector3.Distance (initialPos, _currentPosition));
+			float percentSize = arrowheadSize;
+
+			_lineRenderer.SetPosition(0, initialPos);
 			_lineRenderer.SetPosition(1, _currentPosition);
+
 		}
 
 		if(Input.GetMouseButtonDown(1))
@@ -100,11 +109,12 @@ public class Game : MonoBehaviour
 			edges.Add(edge);
 			currentEdge = edge;
 
-			Vector3 _initialPosition = GetCurrentMousePosition().GetValueOrDefault();
+			initialPos = GetCurrentMousePosition().GetValueOrDefault();
 			LineRenderer _lineRenderer = currentEdge.GetComponent<LineRenderer>();
-			_lineRenderer.SetPosition(0, _initialPosition);
-			_lineRenderer.SetPosition(1, _initialPosition);
+			_lineRenderer.SetPosition(0, initialPos);
+			_lineRenderer.SetPosition(1, initialPos);
 			_lineRenderer.enabled = true;
+			_lineRenderer.material.mainTextureScale = new Vector2(2f,1f);
 		}
 		else if (Input.GetMouseButtonDown(0) && drawing && !GameObject.ReferenceEquals(originNode, node))
 		{

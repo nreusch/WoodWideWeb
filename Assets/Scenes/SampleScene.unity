@@ -158,6 +158,7 @@ MonoBehaviour:
   rangeX: 10
   rangeY: 5
   amountCirles: 4
+  arrowheadSize: 0.1
 --- !u!4 &381704972
 Transform:
   m_ObjectHideFlags: 0
