@@ -27,18 +27,16 @@ public class Game : MonoBehaviour
 
 	void initWorld()
 	{
-		// GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
-		// nodes.Add(node);
+		GameObject node = Instantiate(nodePrefab, new Vector3(0,0,0), Quaternion.identity, transform);
+		nodes.Add(node.GetComponent<TreeNode>());
 
-		// for (int i = 0; i < amountCirles; i++){
-		// 	Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
-		// 	// GameObject node = Instantiate(nodePrefab, nodeLocation, Quaternion.identity, transform);
-		// 	SpawnPrefabOnCircle2D(nodePrefab, 3f);
-		// 	nodes.Add(node);
-		// }
+		for (int i = 0; i < amountCirles; i++){
+			Vector3 nodeLocation = new Vector3(Random.Range(-rangeX, rangeX), Random.Range(-rangeY, rangeY), 0);
+			SpawnPrefabOnCircle2D(nodePrefab, 3f);
+		}
 	}
 
-	void SpawnPrefabOnCircle2D(TreeNode nodePrefab, float radius)
+	void SpawnPrefabOnCircle2D(GameObject nodePrefab, float radius)
 	{
 		Vector3 randomPos = Random.insideUnitSphere * radius;
 		randomPos += transform.position;
@@ -55,9 +53,9 @@ public class Game : MonoBehaviour
 		randomPos.y = Mathf.Sin(dotProductAngle * (Random.value > 0.5f ? 1f : -1f)) * radius + centerPoint.y;
 		randomPos.z = transform.position.z;
 		
-		TreeNode node = Instantiate(nodePrefab, randomPos, Quaternion.identity);
+		GameObject node = Instantiate(nodePrefab, randomPos, Quaternion.identity);;
 		node.transform.position = randomPos;
-		nodes.Add(node);
+		nodes.Add(node.GetComponent<TreeNode>());
 	}
 
     // Update is called once per frame
